@@ -1,0 +1,72 @@
+{
+  "macros": [    
+    "CELLULAR_DEVICE=GEMALTO_CINTERION", 
+    "MDMTXD=WIFI_CELLULAR_TX", 
+    "MDMRXD=WIFI_CELLULAR_RX",  
+    "MDMRTS=NC",
+    "MDMCTS=NC",
+    "HAVE_DEBUG=1"
+  ],
+  "target_overrides": {
+    "*": {
+      "target.features_add": [        
+        "LWIP"
+      ],
+      "platform.stdio-baud-rate": 115200,
+      "platform.stdio-convert-newlines": true,
+      "platform.stdio-buffered-serial": true,
+      "platform.default-serial-baud-rate": 115200,      
+      "mbed-trace.enable": 1,
+      "drivers.uart-serial-txbuf-size": 1024,
+      "drivers.uart-serial-rxbuf-size": 1024
+    },    
+    "MM": {
+      "target.network-default-interface-type": "CELLULAR",            
+      "target.OUTPUT_EXT": "hex",
+      "target.features_remove": [
+        "CRYPTOCELL310"
+      ],
+      "target.macros_remove": [
+        "MBEDTLS_CONFIG_HW_SUPPORT"
+      ],      
+      "lwip.ipv4-enabled": 	  true,
+      "lwip.ipv6-enabled":    true,
+      "lwip.ppp-enabled":     true,
+      "lwip.tcp-enabled":     true,
+      "lwip.ethernet-enabled":false,
+      "lwip.mem-size": 22000,               
+      "cellular.debug-at":    1,
+      "nsapi.default-cellular-apn": null,
+      "nsapi.default-cellular-sim-pin": null,
+      "nsapi.default-cellular-username": null,
+      "nsapi.default-cellular-password": null      
+    }
+  },
+  "config": {     
+    "developer-mode": {
+      "help": "Enable Developer mode to skip Factory enrollment",
+      "options": [
+        null,
+        1
+      ],
+      "value": 1
+    },    
+    "led-pinname": {
+      "help": "PinName for led, which is attached to led blink resource.",
+      "value": "LED1"
+    },    
+    "reset-pinname": {
+      "help": "PinName for module reset.",
+      "value": "CELL_EMERG_RST"
+    },
+    "sock-type": "TCP",
+        "echo-server-hostname": {
+            "help": "Echo server host name.",
+            "value": "\"echo.mbedcloudtesting.com\""
+    },
+    "echo-server-port": {
+        "help": "Echo server port number.",
+        "value": 7
+    }
+    }
+}

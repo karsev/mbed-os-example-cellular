@@ -18,6 +18,7 @@
 #include "common_functions.h"
 #include "UDPSocket.h"
 #include "CellularLog.h"
+#include "max77801.h"
 
 #define UDP 0
 #define TCP 1
@@ -34,6 +35,48 @@ const char *host_name = MBED_CONF_APP_ECHO_SERVER_HOSTNAME;
 const int port = MBED_CONF_APP_ECHO_SERVER_PORT;
 
 static rtos::Mutex trace_mutex;
+
+#ifdef TARGET_MM
+DigitalOut wifi_reset_n(RESET_N, 1); // reset line high to deassert
+DigitalOut wifi_no(WIFI_N, 0); // configure mux for wifi
+DigitalOut cell_power_control(CELL_PWR_EN, 1); // turn off cell
+DigitalOut cell_on(CELL_ON, 1); // turn off cell
+DigitalOut gnss_power_control(GPS_PWR_EN, 0);  // turn off gps
+DigitalOut wifi_power_enable(WIFI_PWR_EN, 0); // vcc power on
+#endif
+
+
+int init_cellular_power(void) {
+
+#ifdef TARGET_MM
+	wifi_power_enable.write(0);
+	cell_power_control.write(1);
+	I2C i2cBus(DCDC_I2C_SDA, DCDC_I2C_SCL);
+	i2cBus.frequency(400000);
+
+	MAX77801 max77801(&i2cBus);
+	wait_ms(100);
+	wait(1);
+
+	int rData = max77801.init();
+	if (rData < 0)
+	{
+		printf("MAX77801 Fail to Init. Stopped\r\n");
+		return -1;
+	}
+	else
+	{
+		printf("MAX77801 Init Done\r\n");
+	}
+
+	// write 3.8v
+	rData = max77801.write_register(MAX77801::REG_VOUT_DVS_L, 0x60);
+	if (rData < 0)
+		printf("Error: to access data\r\n");
+
+#endif
+}
+
 
 #if MBED_CONF_MBED_TRACE_ENABLE
 static void trace_wait()
@@ -214,6 +257,7 @@ int main()
     dot_thread.start(dot_event);
 #endif // #if MBED_CONF_MBED_TRACE_ENABLE
 
+    init_cellular_power();
     // sim pin, apn, credentials and possible plmn are taken atuomtically from json when using get_default_instance()
     iface = NetworkInterface::get_default_instance();
     MBED_ASSERT(iface);
