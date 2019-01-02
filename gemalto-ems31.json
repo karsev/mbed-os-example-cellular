@@ -15,7 +15,7 @@
       "platform.stdio-baud-rate": 115200,
       "platform.stdio-convert-newlines": true,
       "platform.stdio-buffered-serial": true,
-      "platform.default-serial-baud-rate": 115200,      
+      "platform.default-serial-baud-rate": 115200,
       "mbed-trace.enable": 1,
       "drivers.uart-serial-txbuf-size": 1024,
       "drivers.uart-serial-rxbuf-size": 1024
@@ -29,7 +29,7 @@
       "target.macros_remove": [
         "MBEDTLS_CONFIG_HW_SUPPORT"
       ],      
-      "lwip.ipv4-enabled": 	  true,
+      "lwip.ipv4-enabled":    true,
       "lwip.ipv6-enabled":    true,
       "lwip.ppp-enabled":     true,
       "lwip.tcp-enabled":     true,

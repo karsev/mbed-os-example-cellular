@@ -37,27 +37,22 @@ const int port = MBED_CONF_APP_ECHO_SERVER_PORT;
 static rtos::Mutex trace_mutex;
 
 #ifdef TARGET_MM
-DigitalOut wifi_reset_n(RESET_N, 1); // reset line high to deassert
-DigitalOut wifi_no(WIFI_N, 0); // configure mux for wifi
-DigitalOut cell_power_control(CELL_PWR_EN, 1); // turn off cell
-DigitalOut cell_on(CELL_ON, 1); // turn off cell
+DigitalOut wifi_no(WIFI_N, 0); // configure mux for cellular
+DigitalOut cell_power_control(CELL_PWR_EN, 1); // turn on cell
+DigitalOut cell_on(CELL_ON, 1);
 DigitalOut gnss_power_control(GPS_PWR_EN, 0);  // turn off gps
-DigitalOut wifi_power_enable(WIFI_PWR_EN, 0); // vcc power on
+DigitalOut wifi_power_enable(WIFI_PWR_EN, 0); // wifi vcc power off
 #endif
 
 
 int init_cellular_power(void) {
 
 #ifdef TARGET_MM
-	wifi_power_enable.write(0);
-	cell_power_control.write(1);
 	I2C i2cBus(DCDC_I2C_SDA, DCDC_I2C_SCL);
 	i2cBus.frequency(400000);
 
 	MAX77801 max77801(&i2cBus);
-	wait_ms(100);
 	wait(1);
-
 	int rData = max77801.init();
 	if (rData < 0)
 	{
