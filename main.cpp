@@ -40,6 +40,7 @@ static rtos::Mutex trace_mutex;
 DigitalOut wifi_no(WIFI_N, 0); // configure mux for cellular
 DigitalOut cell_power_control(CELL_PWR_EN, 1); // turn on cell
 DigitalOut cell_on(CELL_ON, 1);
+DigitalOut cell_emerg_rst(CELL_EMERG_RST, 0); // let this high on modem side
 DigitalOut gnss_power_control(GPS_PWR_EN, 0);  // turn off gps
 DigitalOut wifi_power_enable(WIFI_PWR_EN, 0); // wifi vcc power off
 #endif
